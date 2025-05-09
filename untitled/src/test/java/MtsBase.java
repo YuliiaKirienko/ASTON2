@@ -1,10 +1,6 @@
-
 import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -64,7 +60,6 @@ public class MtsBase {
         }
     }
 
-
     public void enterPhoneNumber(String phone) {
         WebElement element = wait.until(ExpectedConditions.elementToBeClickable(phoneInput));
         element.clear();
@@ -106,7 +101,6 @@ public class MtsBase {
         wait.until(ExpectedConditions.presenceOfElementLocated(debtAccountInput));
     }
 
-
     public String getHomeInternetAccountPlaceholder() {
         return wait.until(ExpectedConditions.presenceOfElementLocated(homeInternetAccountInput))
                 .getAttribute("placeholder");
@@ -121,7 +115,6 @@ public class MtsBase {
         return wait.until(ExpectedConditions.presenceOfElementLocated(debtAccountInput))
                 .getAttribute("placeholder");
     }
-
 
     public String getEnterPhoneNumber() {
         WebElement phoneInputElement = wait.until(ExpectedConditions.presenceOfElementLocated(phoneInput));
@@ -169,7 +162,6 @@ public class MtsBase {
                 .getAttribute("placeholder");
     }
 
-
     public String getModalPhoneText() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(modalPhone))
                 .getText();
@@ -207,16 +199,4 @@ public class MtsBase {
         }
     }
 
-    public void waitForPageToLoad(){
-        try {
-            wait.until(ExpectedConditions.jsReturnsValue("return document.readyState === 'complete'"));
-            wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".loader, .spinner")));
-        } catch (Exception e) {
-            System.out.println("Page load check skipped: " + e.getMessage());
-        }
-    }
-
-    public boolean arePaymentSystemIconsDisplayed() {
-        return !driver.findElements(paymentSystemIcons).isEmpty();
-    }
 }

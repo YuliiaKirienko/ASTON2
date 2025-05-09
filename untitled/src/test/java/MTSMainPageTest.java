@@ -1,7 +1,5 @@
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,6 +8,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.time.Duration;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MTSMainPageTest {
@@ -29,8 +28,6 @@ public class MTSMainPageTest {
         driver = new ChromeDriver(options);
         mtsBase = new MtsBase(driver);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
-
     }
 
     @Test
@@ -98,7 +95,6 @@ public class MTSMainPageTest {
         mtsBase.enterSum(MtsBase.TEST_SUM);
 
         //Проверка заполнения полей и кнопки Продолжить
-
         assertTrue(driver.findElement(mtsBase.continueButton).isEnabled());
         assertEquals(MtsBase.TEST_PHONE, mtsBase.getEnterPhoneNumber());
         assertEquals(MtsBase.TEST_SUM, mtsBase.getEnteredSum());
@@ -168,6 +164,7 @@ public class MTSMainPageTest {
                         "Неверный плейсхолдер для e-mail")
         );
     }
+
     @Test
     void verifyMobileServicesPaymentProcess() {
         mtsBase.open();
@@ -211,7 +208,6 @@ public class MTSMainPageTest {
                         "Иконка Белкарт не отображается")
         );
     }
-
 
     @AfterEach
     public void teardown() {
