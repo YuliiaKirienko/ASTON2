@@ -216,7 +216,6 @@ public class MtsBase {
         }
     }
 
-
     public boolean arePaymentSystemIconsDisplayed() {
         return !driver.findElements(paymentSystemIcons).isEmpty();
     }
