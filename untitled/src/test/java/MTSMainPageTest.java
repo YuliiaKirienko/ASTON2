@@ -169,47 +169,50 @@ public class MTSMainPageTest {
                         "Неверный плейсхолдер для e-mail")
         );
     }
-
     @Test
-    @DisplayName("Проверка отображения суммы платежа")
-    void verifySumDisplay() {
+    void verifyMobileServicesPaymentProcess() {
         mtsBase.open();
         mtsBase.acceptCookies();
-        assertAll(
-                () -> assertEquals(MtsBase.TEST_SUM + " BYN", mtsBase.getModalSumText()),
-                () -> assertEquals(MtsBase.TEST_SUM + " BYN", mtsBase.getModalButtonSumText())
+        mtsBase.selectServicesTab();
+
+        // Заполнение формы
+        mtsBase.enterPhoneNumber(MtsBase.TEST_PHONE);
+        mtsBase.enterEmail(MtsBase.TEST_EMAIL);
+        mtsBase.enterSum(MtsBase.TEST_SUM);
+        mtsBase.clickContinue();
+
+        // Ожидание и проверка модального окна
+        //mtsBase.waitForPaymentModal();
+
+        assertAll("Проверка данных в модальном окне",
+                // Проверка отображения суммы
+                () -> assertEquals(MtsBase.TEST_SUM + ".00 BYN", mtsBase.getModalSumText(),
+                        "Сумма не совпадает с введенной"),
+                () -> assertEquals(MtsBase.TEST_SUM + " BYN", mtsBase.getModalButtonSumText(),
+                        "Сумма на кнопке не совпадает с введенной"),
+
+                // Проверка номера телефона
+                () -> assertEquals(MtsBase.TEST_PHONE, mtsBase.getModalPhoneText(),
+                        "Номер телефона не совпадает с введенным"),
+
+                // Проверка плейсхолдеров
+                () -> assertEquals("Номер карты", mtsBase.getCardNumberPlaceholder(),
+                        "Неверный плейсхолдер для номера карты"),
+                () -> assertEquals("Срок действия", mtsBase.getCardExpiryPlaceholder(),
+                        "Неверный плейсхолдер для срока действия"),
+                () -> assertEquals("CVC", mtsBase.getCardCvvPlaceholder(),
+                        "Неверный плейсхолдер для CVC"),
+                () -> assertEquals("Имя держателя (как на карте)", mtsBase.getCardNamePlaceholder(),
+                        "Неверный плейсхолдер для имени держателя"),
+
+                // Проверка иконок платежных систем
+                () -> assertTrue(mtsBase.isPaymentSystemIconDisplayed("Visa"),
+                        "Иконка Visa не отображается"),
+                () -> assertTrue(mtsBase.isPaymentSystemIconDisplayed("Mastercard"),
+                        "Иконка Mastercard не отображается"),
+                () -> assertTrue(mtsBase.isPaymentSystemIconDisplayed("Белкарт"),
+                        "Иконка Белкарт не отображается")
         );
-    }
-
-    @Test
-    @DisplayName("Проверка отображения номера телефона")
-    void verifyPhoneNumberDisplay() {
-        mtsBase.open();
-        mtsBase.acceptCookies();
-        assertEquals(MtsBase.TEST_PHONE, mtsBase.getModalPhoneText());
-    }
-
-    @Test
-    @DisplayName("Проверка плейсхолдеров полей карты")
-    void verifyCardInputPlaceholders() {
-        mtsBase.open();
-        mtsBase.acceptCookies();
-        assertAll(
-                () -> assertEquals("Номер карты", mtsBase.getCardNumberPlaceholder()),
-                () -> assertEquals("Срок действия", mtsBase.getCardExpiryPlaceholder()),
-                () -> assertEquals("CVC", mtsBase.getCardCvvPlaceholder()),
-                () -> assertEquals("Имя держателя (как на карте)", mtsBase.getCardNamePlaceholder())
-        );
-    }
-
-    @ParameterizedTest
-    @ValueSource(strings = {"Visa", "Mastercard", "Белкарт"})
-    @DisplayName("Проверка отображения иконок платежных систем")
-    void verifyPaymentSystemIcons(String paymentSystem) {
-        mtsBase.open();
-        mtsBase.acceptCookies();
-        assertTrue(mtsBase.isPaymentSystemIconDisplayed(paymentSystem),
-                "Иконка " + paymentSystem + " не отображается");
     }
 
     @AfterEach

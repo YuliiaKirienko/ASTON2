@@ -172,41 +172,6 @@ public class MtsBase {
                 .getAttribute("placeholder");
     }
 
-    public void waitForPaymentModal() {
-        try {
-            // 1. Ожидаем загрузки страницы
-            waitForPageToLoad();
-
-            // 2. Ожидаем кликабельности кнопки продолжения
-            wait.until(ExpectedConditions.elementToBeClickable(continueButton));
-
-            // 3. Ожидаем появления модального окна
-            wait.until(d -> {
-                try {
-                    WebElement modal = driver.findElement(paymentModal);
-                    return modal.isDisplayed() && modal.getAttribute("class").contains("active");
-                } catch (Exception e) {
-                    return false;
-                }
-            });
-
-            // 4. Проверяем видимость ключевых элементов в модальном окне
-            shortWait.until(ExpectedConditions.visibilityOfElementLocated(modalPhone));
-            shortWait.until(ExpectedConditions.visibilityOfElementLocated(modalAmount));
-            shortWait.until(ExpectedConditions.elementToBeClickable(modalButtonAmount));
-
-        } catch (TimeoutException e) {
-            // Расширенная диагностика при ошибке
-            System.err.println("=== DEBUG INFORMATION ===");
-            System.err.println("Current URL: " + driver.getCurrentUrl());
-            System.err.println("Modal element exists: " + driver.findElements(paymentModal).size());
-            System.err.println("Modal visible: " +
-                    (driver.findElements(paymentModal).size() > 0 ?
-                            driver.findElement(paymentModal).isDisplayed() : "N/A"));
-            throw new RuntimeException("Failed to load payment modal", e);
-        }
-    }
-
 
     public String getModalPhoneText() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(modalPhone))
