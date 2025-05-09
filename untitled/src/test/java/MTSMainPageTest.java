@@ -180,9 +180,23 @@ public class MTSMainPageTest {
         mtsBase.enterSum(MtsBase.TEST_SUM);
         mtsBase.clickContinue();
 
-        assertAll(
-                // Проверка плейсхолдеров
+        // Ожидание и проверка модального окна
+        //mtsBase.waitForPaymentModal();
 
+        assertAll("Проверка данных в модальном окне",
+                // Проверка отображения суммы
+                () -> assertEquals(MtsBase.TEST_SUM + ".00 BYN", mtsBase.getModalSumText(),
+                        "Сумма не совпадает с введенной"),
+                () -> assertEquals(MtsBase.TEST_SUM + " BYN", mtsBase.getModalButtonSumText(),
+                        "Сумма на кнопке не совпадает с введенной"),
+
+                // Проверка номера телефона
+                () -> assertEquals(MtsBase.TEST_PHONE, mtsBase.getModalPhoneText(),
+                        "Номер телефона не совпадает с введенным"),
+
+                // Проверка плейсхолдеров
+                () -> assertEquals("Номер карты", mtsBase.getCardNumberPlaceholder(),
+                        "Неверный плейсхолдер для номера карты"),
                 () -> assertEquals("Срок действия", mtsBase.getCardExpiryPlaceholder(),
                         "Неверный плейсхолдер для срока действия"),
                 () -> assertEquals("CVC", mtsBase.getCardCvvPlaceholder(),
@@ -199,6 +213,7 @@ public class MTSMainPageTest {
                         "Иконка Белкарт не отображается")
         );
     }
+
 
     @AfterEach
     public void teardown() {
