@@ -29,17 +29,16 @@ public class MtsBase {
     private final By servicesTab = By.xpath("//span[text()='Услуги связи']");
     private final By installmentTab = By.xpath("//option[@value='Рассрочка']");
     private final By debtTab = By.xpath("//option[@value='Задолженность' and @data-open='pay-arrears']");
-    private final By cardNumberInput = By.xpath("//input[@formcontrolname='creditCard']");
+    private final By cardNumberInput = By.xpath("//input[@id='cc-number']");
     private final By cardExpiryInput = By.xpath("//input[@formcontrolname='expirationDate']");
     private final By cardCvvInput = By.xpath("//input[@formcontrolname='cvc']");
-    private final By cardNameInput = By.xpath("//input[@formcontrolname='holder']");
-    private final By paymentModal = By.xpath("//*[contains(@class,'app-wrapper__content')]");
+    private final By cardNameInput = By.xpath("//input[@placeholder='Имя держателя']");
     private final By modalPhone = By.xpath("//span[contains(., 'Номер:375297777777')]");
     private final By modalSum = By.xpath("//span[contains(., 'BYN')]");
     private final By modalButtonSum = By.xpath("//button[contains(@class, 'colored') and contains(., 'BYN')]");
     private final By paymentSystemIcons = By.xpath("//div[contains(@class, 'cards-brands__container')]");
-    private final By visaIcon = By.xpath("//img[contains(@src, 'visa-system.svg')]");
-    private final By mastercardIcon = By.xpath("//img[contains(@src, 'mastercard-system.svg')]");
+    private final By visaIcon = By.xpath("//img[contains(@src, 'visa')]");
+    private final By mastercardIcon = By.xpath("//img[contains(@src, 'mastercard')]");
     private final By belcardIcon = By.xpath("//img[contains(@src, 'belkart') or contains(@alt, 'Белкарт')]");
 
 
@@ -210,7 +209,7 @@ public class MtsBase {
         }
     }
 
-    public void waitForPageToLoad() {
+    public void waitForPageToLoad(){
         try {
             wait.until(ExpectedConditions.jsReturnsValue("return document.readyState === 'complete'"));
             wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector(".loader, .spinner")));
