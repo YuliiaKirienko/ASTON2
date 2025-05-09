@@ -180,8 +180,6 @@ public class MTSMainPageTest {
         mtsBase.enterSum(MtsBase.TEST_SUM);
         mtsBase.clickContinue();
 
-        // Ожидание и проверка модального окна
-        //mtsBase.waitForPaymentModal();
 
         assertAll("Проверка данных в модальном окне",
                 // Проверка отображения суммы
