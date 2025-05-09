@@ -181,7 +181,6 @@ public class MTSMainPageTest {
         mtsBase.enterSum(MtsBase.TEST_SUM);
         mtsBase.clickContinue();
 
-
         assertAll(
                 // Проверка плейсхолдеров
 

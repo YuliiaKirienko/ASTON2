@@ -22,10 +22,8 @@ public class MtsBase {
     final By continueButton = By.xpath("//*[@id='pay-connection']/button");
     private final By homeInternetAccountInput = By.xpath("//input[@placeholder='Номер абонента']");
     private final By installmentAccountInput = By.xpath("//input[@placeholder='Номер счета на 44']");
-    ;
     private final By debtAccountInput = By.xpath("//input[contains(@placeholder, 'Номер счета на 2073')]");
     private final By homeInternetTab = By.xpath("//*[@id='pay-section']/div/div/div[2]/section/div/div[1]/div[1]/div[2]/button/span[1]");
-    ;
     private final By servicesTab = By.xpath("//span[text()='Услуги связи']");
     private final By installmentTab = By.xpath("//option[@value='Рассрочка']");
     private final By debtTab = By.xpath("//option[@value='Задолженность' and @data-open='pay-arrears']");
