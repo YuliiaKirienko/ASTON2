@@ -174,7 +174,7 @@ public class MTSMainPageTest {
         PaymentPage paymentPage = mtsBase.fillAndSubmitPaymentForm(
                 "297777777",
                 "100",
-                "test@example.com"
+                "kupikota@test.com"
         );
 
         assertAll("Проверка платежной страницы",
