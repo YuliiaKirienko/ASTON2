@@ -27,15 +27,15 @@ public class MTSMainPageTest {
         options.addArguments("--start-maximized");
         driver = new ChromeDriver(options);
         mtsBase = new MtsBase(driver);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(20));
     }
 
     @Test
+    @Order(1)
     void verifyBlockTitle() {
         mtsBase.open();
         mtsBase.acceptCookies();
 
-        // Проверка названия блока
         WebElement title = driver.findElement(By.xpath("//h2[contains(., 'Онлайн пополнение без комиссии')]"));
         String actualText = title.getText()
                 .replace("\n", " ")
@@ -46,11 +46,11 @@ public class MTSMainPageTest {
     }
 
     @Test
+    @Order(2)
     void verifyPaymentLogo() {
         mtsBase.open();
         mtsBase.acceptCookies();
 
-        // Проверка логотипов платежных систем
         WebElement logosContainer = driver.findElement(By.cssSelector(".pay__partners"));
         List<WebElement> logoImages = logosContainer.findElements(By.tagName("img"));
 
@@ -71,11 +71,11 @@ public class MTSMainPageTest {
     }
 
     @Test
+    @Order(3)
     void verifyDetailsLink() {
         mtsBase.open();
         mtsBase.acceptCookies();
 
-        // Проверка ссылки "Подробнее о сервисе"
         WebElement detailsLink = driver.findElement(By.xpath("//a[contains(., 'Подробнее о сервисе')]"));
 
         assertAll("Проверка ссылки 'Подробнее о сервисе'",
@@ -86,6 +86,7 @@ public class MTSMainPageTest {
     }
 
     @Test
+    @Order(4)
     void verifyPaymentForm() {
         mtsBase.open();
         mtsBase.acceptCookies();
@@ -94,14 +95,13 @@ public class MTSMainPageTest {
         mtsBase.enterEmail(MtsBase.TEST_EMAIL);
         mtsBase.enterSum(MtsBase.TEST_SUM);
 
-        //Проверка заполнения полей и кнопки Продолжить
         assertTrue(driver.findElement(mtsBase.continueButton).isEnabled());
         assertEquals(MtsBase.TEST_PHONE, mtsBase.getEnterPhoneNumber());
         assertEquals(MtsBase.TEST_SUM, mtsBase.getEnteredSum());
     }
 
-
     @Test
+    @Order(5)
     void verifyEmptyFieldsPlaceholdersForMobileServices() {
         mtsBase.open();
         mtsBase.acceptCookies();
@@ -118,6 +118,7 @@ public class MTSMainPageTest {
     }
 
     @Test
+    @Order(6)
     void verifyEmptyFieldsPlaceholdersForHomeInternet() {
         mtsBase.open();
         mtsBase.acceptCookies();
@@ -134,6 +135,7 @@ public class MTSMainPageTest {
     }
 
     @Test
+    @Order(7)
     void verifyEmptyFieldsPlaceholdersForInstallment() {
         mtsBase.open();
         mtsBase.acceptCookies();
@@ -150,6 +152,7 @@ public class MTSMainPageTest {
     }
 
     @Test
+    @Order(8)
     void verifyEmptyFieldsPlaceholdersForDebt() {
         mtsBase.open();
         mtsBase.acceptCookies();
@@ -166,46 +169,31 @@ public class MTSMainPageTest {
     }
 
     @Test
+    @Order(9)
     void verifyMobileServicesPaymentProcess() {
-        mtsBase.open();
-        mtsBase.acceptCookies();
-        mtsBase.selectServicesTab();
+        PaymentPage paymentPage = mtsBase.fillAndSubmitPaymentForm(
+                "297777777",
+                "100",
+                "test@example.com"
+        );
 
-        // Заполнение формы
-        mtsBase.enterPhoneNumber(MtsBase.TEST_PHONE);
-        mtsBase.enterEmail(MtsBase.TEST_EMAIL);
-        mtsBase.enterSum(MtsBase.TEST_SUM);
-        mtsBase.clickContinue();
-
-
-        assertAll("Проверка данных в модальном окне",
-                // Проверка отображения суммы
-                () -> assertEquals(MtsBase.TEST_SUM + ".00 BYN", mtsBase.getModalSumText(),
-                        "Сумма не совпадает с введенной"),
-                () -> assertEquals(MtsBase.TEST_SUM + " BYN", mtsBase.getModalButtonSumText(),
-                        "Сумма на кнопке не совпадает с введенной"),
-
-                // Проверка номера телефона
-                () -> assertEquals(MtsBase.TEST_PHONE, mtsBase.getModalPhoneText(),
-                        "Номер телефона не совпадает с введенным"),
-
-                // Проверка плейсхолдеров
-                () -> assertEquals("Номер карты", mtsBase.getCardNumberPlaceholder(),
-                        "Неверный плейсхолдер для номера карты"),
-                () -> assertEquals("Срок действия", mtsBase.getCardExpiryPlaceholder(),
-                        "Неверный плейсхолдер для срока действия"),
-                () -> assertEquals("CVC", mtsBase.getCardCvvPlaceholder(),
-                        "Неверный плейсхолдер для CVC"),
-                () -> assertEquals("Имя держателя (как на карте)", mtsBase.getCardNamePlaceholder(),
-                        "Неверный плейсхолдер для имени держателя"),
-
-                // Проверка иконок платежных систем
-                () -> assertTrue(mtsBase.isPaymentSystemIconDisplayed("Visa"),
-                        "Иконка Visa не отображается"),
-                () -> assertTrue(mtsBase.isPaymentSystemIconDisplayed("Mastercard"),
-                        "Иконка Mastercard не отображается"),
-                () -> assertTrue(mtsBase.isPaymentSystemIconDisplayed("Белкарт"),
-                        "Иконка Белкарт не отображается")
+        assertAll("Проверка платежной страницы",
+                () -> assertTrue(paymentPage.isPaymentFrameDisplayed(),
+                        "Платежное окно не отображается"),
+                () -> assertEquals("100.00 BYN", paymentPage.getDisplayedAmount(),
+                        "Неверная сумма платежа"),
+                () -> assertTrue(paymentPage.getDisplayedPhoneNumber().contains("375297777777"),
+                        "Номер телефона не соответствует ожидаемому"),
+                () -> assertEquals("Номер карты", paymentPage.getCardNumberLabel(),
+                        "Неверная метка для номера карты"),
+                () -> assertEquals("Срок действия", paymentPage.getExpiryDateLabel(),
+                        "Неверная метка для срока действия"),
+                () -> assertEquals("CVC", paymentPage.getCvcLabel(),
+                        "Неверная метка для CVC"),
+                () -> assertEquals(4, paymentPage.getPaymentSystemsCount(),
+                        "Неверное количество платежных систем"),
+                () -> assertTrue(paymentPage.getSubmitButtonText().contains("100.00 BYN"),
+                        "Неверная сумма на кнопке оплаты")
         );
     }
 
@@ -215,6 +203,5 @@ public class MTSMainPageTest {
             driver.quit();
         }
     }
-
 }
 

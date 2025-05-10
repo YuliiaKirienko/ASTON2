@@ -1,6 +1,10 @@
+
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -10,6 +14,7 @@ public class MtsBase {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final WebDriverWait shortWait;
+
 
     private final By cookieButton = By.xpath("//*[@id='cookie-agree']");
     private final By phoneInput = By.xpath("//*[@id='connection-phone']");
@@ -60,6 +65,7 @@ public class MtsBase {
         }
     }
 
+
     public void enterPhoneNumber(String phone) {
         WebElement element = wait.until(ExpectedConditions.elementToBeClickable(phoneInput));
         element.clear();
@@ -86,6 +92,7 @@ public class MtsBase {
         wait.until(ExpectedConditions.elementToBeClickable(servicesTab)).click();
     }
 
+
     public void selectHomeInternetTab() {
         wait.until(ExpectedConditions.elementToBeClickable(homeInternetTab)).click();
         wait.until(ExpectedConditions.presenceOfElementLocated(homeInternetAccountInput));
@@ -101,20 +108,6 @@ public class MtsBase {
         wait.until(ExpectedConditions.presenceOfElementLocated(debtAccountInput));
     }
 
-    public String getHomeInternetAccountPlaceholder() {
-        return wait.until(ExpectedConditions.presenceOfElementLocated(homeInternetAccountInput))
-                .getAttribute("placeholder");
-    }
-
-    public String getInstallmentAccountPlaceholder() {
-        return wait.until(ExpectedConditions.presenceOfElementLocated(installmentAccountInput))
-                .getAttribute("placeholder");
-    }
-
-    public String getDebtAccountPlaceholder() {
-        return wait.until(ExpectedConditions.presenceOfElementLocated(debtAccountInput))
-                .getAttribute("placeholder");
-    }
 
     public String getEnterPhoneNumber() {
         WebElement phoneInputElement = wait.until(ExpectedConditions.presenceOfElementLocated(phoneInput));
@@ -147,56 +140,46 @@ public class MtsBase {
                 .getAttribute("placeholder");
     }
 
-    public String getCardNumberPlaceholder() {
-        return wait.until(ExpectedConditions.presenceOfElementLocated(cardNumberInput))
+    public String getHomeInternetAccountPlaceholder() {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(homeInternetAccountInput))
                 .getAttribute("placeholder");
     }
 
-    public String getCardExpiryPlaceholder() {
-        return wait.until(ExpectedConditions.presenceOfElementLocated(cardExpiryInput))
+    public String getInstallmentAccountPlaceholder() {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(installmentAccountInput))
                 .getAttribute("placeholder");
     }
 
-    public String getCardCvvPlaceholder() {
-        return wait.until(ExpectedConditions.presenceOfElementLocated(cardCvvInput))
+    public String getDebtAccountPlaceholder() {
+        return wait.until(ExpectedConditions.presenceOfElementLocated(debtAccountInput))
                 .getAttribute("placeholder");
     }
 
-    public String getModalPhoneText() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(modalPhone))
-                .getText();
+    // Основной метод для заполнения формы
+    public PaymentPage fillAndSubmitPaymentForm(String phone, String amount, String email) {
+        open();
+        acceptCookies();
+        selectServicesTab();
+
+        enterPhoneNumber(phone);
+        enterEmail(email);
+        enterSum(amount);
+
+        clickContinue();
+
+        return new PaymentPage(driver);
     }
 
-    public String getModalSumText() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(modalSum))
-                .getText();
-    }
-
-    public String getModalButtonSumText() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(modalButtonSum))
-                .getText();
-    }
-
-    public String getCardNamePlaceholder() {
-        return wait.until(ExpectedConditions.presenceOfElementLocated(cardNameInput))
-                .getAttribute("placeholder");
-    }
-
-    public boolean isPaymentSystemIconDisplayed(String systemName) {
-        try {
-            switch (systemName) {
-                case "Visa":
-                    return driver.findElement(visaIcon).isDisplayed();
-                case "Mastercard":
-                    return driver.findElement(mastercardIcon).isDisplayed();
-                case "Белкарт":
-                    return driver.findElement(belcardIcon).isDisplayed();
-                default:
-                    return false;
-            }
-        } catch (Exception e) {
-            return false;
+    // Вспомогательный метод для форматирования телефона
+    private String formatPhoneNumber(String phone) {
+        String digits = phone.replaceAll("[^0-9]", "");
+        if (digits.length() == 9) {
+            return String.format("(%s)%s-%s-%s",
+                    digits.substring(0, 2),
+                    digits.substring(2, 5),
+                    digits.substring(5, 7),
+                    digits.substring(7));
         }
+        return phone;
     }
-
 }
