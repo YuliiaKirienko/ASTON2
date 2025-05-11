@@ -1,4 +1,3 @@
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -6,11 +5,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.*;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,6 +41,14 @@ class MtsByTest {
         driver.get(SITE_URL);
         wait.until(d -> ((JavascriptExecutor) d)
                 .executeScript("return document.readyState").equals("complete"));
+
+        try {
+            WebElement acceptCookie = new WebDriverWait(driver, Duration.ofSeconds(3))
+                    .until(ExpectedConditions.elementToBeClickable(
+                            By.xpath("//button[contains(., 'Принять')]")));
+            acceptCookie.click();
+        } catch (TimeoutException ignored) {
+        }
     }
 
     @AfterEach
@@ -125,4 +129,5 @@ class MtsByTest {
         ));
         assertTrue(submitButton.isEnabled(), "Кнопка 'Продолжить' должна быть активна");
     }
+
 }
