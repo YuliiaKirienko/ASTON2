@@ -1,9 +1,6 @@
 import org.openqa.selenium.By;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -123,10 +120,6 @@ public class MtsBase {
                 .getAttribute("placeholder");
     }
 
-    public String getAccountFieldPlaceholder() {
-        return wait.until(ExpectedConditions.presenceOfElementLocated(phoneInput))
-                .getAttribute("placeholder");
-    }
 
     public String getHomeInternetAccountPlaceholder() {
         return wait.until(ExpectedConditions.presenceOfElementLocated(homeInternetAccountInput))
@@ -158,15 +151,4 @@ public class MtsBase {
         return new PaymentPage(driver);
     }
 
-    private String formatPhoneNumber(String phone) {
-        String digits = phone.replaceAll("[^0-9]", "");
-        if (digits.length() == 9) {
-            return String.format("(%s)%s-%s-%s",
-                    digits.substring(0, 2),
-                    digits.substring(2, 5),
-                    digits.substring(5, 7),
-                    digits.substring(7));
-        }
-        return phone;
-    }
 }

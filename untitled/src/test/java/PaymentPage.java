@@ -2,12 +2,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.time.Duration;
 
 class PaymentPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
-
     private final By paymentFrame = By.xpath("//iframe[@class='bepaid-iframe']");
     private final By amountDisplay = By.xpath("//div[@class='pay-description__cost']");
     private final By phoneDisplay = By.xpath("//div[@class='pay-description__text']");

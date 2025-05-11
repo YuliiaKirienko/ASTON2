@@ -197,6 +197,7 @@ public class MTSMainPageTest {
         );
     }
 
+
     @AfterEach
     public void teardown() {
         if (driver != null) {
