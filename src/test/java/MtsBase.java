@@ -121,7 +121,6 @@ public class MtsBase {
     }
 
 
-
     public String getHomeInternetAccountPlaceholder() {
         return wait.until(ExpectedConditions.presenceOfElementLocated(homeInternetAccountInput))
                 .getAttribute("placeholder");
