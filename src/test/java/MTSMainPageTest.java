@@ -8,6 +8,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.time.Duration;
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MTSMainPageTest {
@@ -191,6 +192,12 @@ public class MTSMainPageTest {
                         "Неверный плейсхолдер для CVC"),
                 () -> assertEquals(4, paymentPage.getPaymentSystemsCount(),
                         "Неверное количество платежных систем"),
+                () -> assertTrue(paymentPage.isPaymentSystemVisible("Visa"),
+                        "Логотип Visa не отображается"),
+                () -> assertTrue(paymentPage.isPaymentSystemVisible("Mastercard"),
+                        "Логотип Mastercard не отображается"),
+                () -> assertTrue(paymentPage.isPaymentSystemVisible("Белкарт"),
+                        "Логотип Белкарт не отображается"),
                 () -> assertTrue(paymentPage.getSubmitButtonText().contains("100.00 BYN"),
                         "Неверная сумма на кнопке оплаты")
         );

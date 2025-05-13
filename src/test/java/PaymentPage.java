@@ -1,9 +1,11 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 class PaymentPage {
     private final WebDriver driver;
@@ -17,6 +19,9 @@ class PaymentPage {
     private final By expiryDateInput = By.xpath("//label[@class='ng-tns-c2312288139-4 ng-star-inserted']");
     private final By cvcInput = By.xpath("//label[@class='ng-tns-c2312288139-5 ng-star-inserted']");
     private final By paymentSystemIcons = By.cssSelector("img[src*='system']:not([style*='opacity: 0'])");
+    private final By visaIcon = By.xpath("//img[contains(@src, 'visa')]");
+    private final By mastercardIcon = By.xpath("//img[contains(@src, 'mastercard')]");
+    private final By belcardIcon = By.xpath("//img[contains(@src, 'belkart') or contains(@alt, 'Белкарт')]");
     private final By submitButton = By.xpath("//button[@class='colored disabled']");
 
     public PaymentPage(WebDriver driver) {
@@ -27,6 +32,7 @@ class PaymentPage {
     private void switchToPaymentFrame() {
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(paymentFrame));
     }
+
     private void switchToDefaultContent() {
         driver.switchTo().defaultContent();
     }
@@ -93,6 +99,32 @@ class PaymentPage {
         }
     }
 
+    public boolean isPaymentSystemVisible(String systemName) {
+        By locator;
+        switch (systemName.toLowerCase()) {
+            case "visa":
+                locator = visaIcon;
+                break;
+            case "mastercard":
+                locator = mastercardIcon;
+                break;
+            case "белкарт":
+            case "belkart":
+                locator = belcardIcon;
+                break;
+            default:
+                return false;
+        }
+        return !driver.findElements(locator).isEmpty();
+    }
+
+    public List<WebElement> getPaymentSystems() {
+        return driver.findElements(By.xpath(
+                "//img[contains(@src, 'visa') or contains(@src, 'mastercard') or " +
+                        "contains(@src, 'belkart') or contains(@alt, 'Белкарт')]"
+        ));
+    }
+
     public String getSubmitButtonText() {
         switchToPaymentFrame();
         try {
@@ -101,4 +133,5 @@ class PaymentPage {
             switchToDefaultContent();
         }
     }
+
 }
